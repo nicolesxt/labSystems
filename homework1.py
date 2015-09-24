@@ -2,7 +2,11 @@ import feedparser		# imports feedparser to parse XML feed
 import time		# imports time
 
 user='xdtsxt@gmail.com'		# replace *** with your personal gmail user, or youruser@newschool.edu for your school account
+<<<<<<< HEAD
 passwd='xxxxxxxx'		# replace *** with your password for the above account
+=======
+passwd='xxxxxxx'		# replace *** with your password for the above account
+>>>>>>> 97104a2c331ed5e959cec827510d048cf375e2de
 
 while True: 	#loop forever ---- to exit use keys "ctr+c"
     newmails = int(feedparser.parse("https://" + user + ":" + passwd + "@mail.google.com/gmail/feed/atom")["feed"]["fullcount"])
