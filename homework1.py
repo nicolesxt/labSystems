@@ -9,7 +9,8 @@ passwd='xxxxxxx'		# replace *** with your password for the above account
 >>>>>>> 97104a2c331ed5e959cec827510d048cf375e2de
 
 while True: 	#loop forever ---- to exit use keys "ctr+c"
-    newmails = int(feedparser.parse("https://" + user + ":" + passwd + "@mail.google.com/gmail/feed/atom")["feed"]["fullcount"])
+    root = feedparser.parse("https://" + user + ":" + passwd + "@mail.google.com/gmail/feed/atom")
+    newmails = int(root["feed"]["fullcount"])
     
     def emailcount(n): #define function emailcount
         if n > 0: # if you have over 0 emails. You can change this based on how many emails you currently have unread in your inbox
@@ -17,6 +18,16 @@ while True: 	#loop forever ---- to exit use keys "ctr+c"
         else: 
             print "you have no new email"
 
+<<<<<<< Updated upstream
+=======
+    my001 = root["feed"]["title"]
+    my002 = root["entries"][0]["title"]
+    my003 = root["feed"]["published"]
+    print my001
+    print my002
+    print "published time:"
+    print my003
+>>>>>>> Stashed changes
 
     # attemts
 
