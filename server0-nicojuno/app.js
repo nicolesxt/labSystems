@@ -2,7 +2,7 @@ var bodyParser = require('body-parser');
 var express = require("express");
 var app = express();
 var port = 8000;
-var url='192.168.1.134'
+var url='192.168.1.9'
 var server = app.listen(port);
 var io = require("socket.io").listen(server);
 
@@ -21,35 +21,30 @@ var color1, color2, color3;
 
 
 
-portt.open(function(error) {
+        //socket.io stuff
+io.sockets.on('connection', function (socket) {
 
-  if (error) {
-    console.log('failed to open: ' + error);
-  } else {
 
-    console.log('Serial open');
-    portt.on('data', function(data) {
-    //console.log('data length: ' + data.length);
+socket.emit('toScreen', { r: color1, g: color2, b: color3 });
 
-   color1 = data.substr(5,3);
 
-   color2 = data.substr(8,3);
+                portt.open(function(error) {
+                  if (error) {
+                    console.log('failed to open: ' + error);
+                  } else {
+                    console.log('Serial open');
+                    portt.on('data', function(data) {
+                    //console.log('data length: ' + data.length);
+                   color1 = data.substr(5,3);
+                   color2 = data.substr(8,3);
+                   color3 = data.substr(11,3);
+                   console.log(color1 + color2 + color3);
+                //this is where the color data is received on the pi end
+                    });
+                  }
+                });
 
-   color3 = data.substr(11,3);
-   console.log(color1 + color2 + color3);
-
-//this is where the color data is received on the pi end
-
-    });
-  }
 });
 
  app.use(express.static(__dirname + '/'));
  console.log('Simple static server listening at '+url+':'+port);
-
-
-
-//socket.io stuff
-io.sockets.on('connection', function (socket) {
-    socket.emit('toScreen', { r: color1, g: color2, b: color3 });
-});
