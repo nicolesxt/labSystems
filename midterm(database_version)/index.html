@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)http://mrdoob.github.io/three.js/examples/webgl_panorama_equirectangular.html -->
+<html lang="en" style="visibility: visible;">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>three.js webgl - equirectangular panorama demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<!-- your server info -->
+		<script src="//192.168.1.125:8000/socket.io/socket.io.js" type="text/javascript"></script>
+		<script src="js/jquery.js" type="text/javascript"></script>
+		<script src="js/three.min.js"></script>
+</head>
+	
+<body>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+	
+
+
+
+
+<!---------------------------------------------------------------------------------------------->
+	<style type="text/css">
+			*{margin: 0; padding: 0;}
+
+			html body{
+				text-align: center;
+				padding: 5%;
+				margin: 5%;
+				color:#33291F;
+			}
+
+			.containermother1{
+				font-family: 'Ubuntu', sans-serif;
+				color: white;
+				background-color: #000066;
+				padding: 3%;
+				margin: 3%;
+				margin-top: 100px;
+				font-size: 40px;
+			    animation-name: exampleONE;
+			/*    animation-name: exampleTWO;*/
+			    animation-duration: 4s;
+			    animation-iteration-count: infinite;
+			    animation-direction: alternate;
+			}
+
+			@keyframes exampleONE {
+			    from {background-color: #000066;}
+			    to {background-color: #9999FF;}
+			}
+	</style>
+<!---------------------------------------------------------------------------------------------->
+
+
+<script>
+	console.log('script is here');
+	var socket;
+	var myReading;
+	var myInt;
+	var url='192.168.1.125';
+	var port=8000
+		socket = io.connect(url+':'+port);
+
+
+	//for website
+	var counterA=0;
+	var counterB=500;
+	var cutie = 0;
+	var length;
+	length = getLength(paragraph1);//automatically get the length of JSON object
+
+	var container = [];
+	var booleanarray = [];
+	var containermother1 = document.createElement('p');
+
+		function toParse(){
+			console.log("Send data to Parse");
+			for (var i = 0; i<= length-1; i++){
+				var pp1 = paragraph1[i].p1;
+				var pp2 = paragraph1[i].p2;
+				var pp3 = paragraph1[i].p3;
+				var pp4 = paragraph1[i].p4;
+				var pp5 = paragraph1[i].p5;
+			}
+		socket.emit('sendToParse', { pp1: pp1, pp2: pp2, pp3: pp3, pp4: pp4, pp5: pp5 });
+		}
+
+		function fromParse(){
+			console.log("Get data from Parse");
+			socket.emit('getFromParse', { });
+		}
+
+		socket.on('toScreen', function (data) {
+			console.log(data.ParseData);
+			myReading = data.r;
+			myInt = parseInt(myReading);
+			decide();
+
+		});
+
+
+
+		var paragraph1 = [
+
+{//1
+	p1: 'There is a clover called Eve, and a plant detector called Troy.',
+	p2: 'There is a clover called Eve, and a plant detector called Troy.',
+	p3: 'There is a clover called Eve, and a plant detector called Troy.',
+	p4: 'There is a clover called Eve, and a plant detector called Troy.',
+	p5: 'There is a clover called Eve, and a plant detector called Troy.'
+},
+{//2
+	p1: 'right next to each other.',
+	p2: 'in the same flower pot.',
+	p3: 'in a garden full of other plants and plant detectors.',
+	p4: 'but very far away from each other.',
+	p5: 'they exist in the same universe.'
+},
+{//3
+	p1: "Eve saw Troy, she had an immediate crush because of his amazing, unconventional appearance.",
+	p2: "Eve saw Troy, she saw Troy's clean, inorganic, linear body.",
+	p3: "Eve saw a teeny tiny marshmallow-looking creature from a far.",
+	p4: "'Interesting...' Eve thought, 'Someone who's not a plant.'",
+	p5: "'That is a weird-ass looking creature' thought Eve, 'Why on earth does he look like that.'"
+},
+{//4
+	p1: "Eve never felt anything as impactful as this, she has been staring at the sky and listening to air breeze for her whole life, the single presence of Troy amazed her, she can't wait to see what is next.",
+	p2: "'So rare that this doesn't smell like any of my usual friends and accompanies.' Eve laughted inside, 'He smells like some futuristic perfume, how adorable!'",
+	p3: '"Who is it!?" poundered Eve, "He looks so bizarre."',
+	p4: "From the first 5 seconds of knowing Troy. Eve has decided that she doesn't like him.",
+	p5: "Eve doesn't like the way Troy looks, also doesn't like the way he smells and beeps."//hate
+},
+{//5-troy noticed meng
+	p1: "Troy's attention was grabbed at that instance when Eve noticed him, he has never detected something so magical before.",
+	p2: '"I can smell a detector." Troy felt he was the center of the attention of someone, he felt blessed and loved.',//like
+	p3: '"Hey what is that?"Troy felt something from a distant,"It feels mystical, so impossible to explain."',//curious
+	p4: 'Troy has been taught to be careful since the first day he was sent out of the factory. He got caucious, he felt someone is stealing his information.',//confused/attacked
+	p5: '"Oh no..."Troy woke up,"What is this ominous feeling..."'
+},
+{
+	p1: 'The sun was shining. The wind smells like fresh earth.',//best
+	p2: 'It was a decent day.',//good
+	p3: 'The sun was there, the sky was there, it feels just like any other day.',
+	p3: 'The sun went down, and rain drops falled directly into the soil. Eve and Troy both felt it.',//bad
+	p4: 'The sky was dark and the blizzard was howling like a monster.'//worst
+},
+{
+	p1: 'Eve wants to get closer to Troy',
+	p2: 'Eve is pumped for what is gonna happen next.',
+	p3: 'Eve feels very relaxed.',
+	p4: 'Eve was shaking. She is very scared.',
+	p5: 'Eve felt anxious, like there is a stone hanging on his chest.'
+},
+{
+	p1: 'Troy wants to get closer to Eve',
+	p2: 'Troy felt curious, he wants to find out what is gonna happen next.',
+	p3: 'Troy feels very relaxed.',
+	p4: 'Troy was shaking. He is very scared.',
+	p5: 'Troy felt anxious, like there is a stone hanging on his chest.'
+},
+{
+	p1: 'but neither of them could move for a single bit.',
+	p2: 'but neither of them could move for a single bit.',
+	p3: 'but neither of them could move for a single bit.',
+	p4: 'but neither of them could move for a single bit.',
+	p5: 'but neither of them could move for a single bit.'
+},
+{
+	p1: '"I wanna talk to him.", a strong wish came from her root deep down, went through the stems to her whole body.',
+	p2: '"I wanna know him more.", a wish came from her root deep down, went through the stems to her whole body.',
+	p3: '"I hope he send me some signals or other forms of indications."',
+	p4: '"I keep thinking about this new presence in my life. I feel anxious."',
+	p5: '"I feel attacked, I hope this feeling goes away."'
+},
+{
+	p1: 'The thought of hanging out with Troy excites Eve, she irresistibly secreted some hormones',
+	p2: '"Notice me!" craved Eve while she irresistibly secreted some hormones.',
+	p3: '"Maybe I should send some signals to him.", Eve secreted some hormones.',
+	p4: '"Maybe I should send some signals to him.", Eve secreted some hormones.',
+	p5: 'Eve yawned while accidentally secreted some sort of hormones that might lead to some sort of misunderstanding from Troy.'
+},
+{
+	p1: "Troy detected some hormones from Eve, as a plant detector, he was built to do so.",
+	p2: "Troy detected some hormones from Eve, as a plant detector, he was built to do so.",
+	p3: "Troy detected some hormones from Eve, as a plant detector, he was built to do so.",
+	p4: "Troy detected some hormones from Eve, as a plant detector, he was built to do so.",
+	p5: "Troy detected some hormones from Eve, as a plant detector, he was built to do so."
+},
+{
+	p1: "The first piece of signal detected from Eve feels gorgeous. The warm current went through Troy's whole body.",
+	p2: '"That is her signal for me, it has to be." thought Troy, "I gotta send some response!"',
+	p3: 'Troy felt blessed when he deteced the hormones, "That must be her signal! Yay!"',
+	p4: '"Is it for me? or...... it could be for anyone else..."',//insecure
+	p5: "Troy sensed something, he doesn't care if it's for him or not, but he imagine maybe it'd be rude if he doesn't respond?"
+},
+{
+	p1: '"Beep, beep, beep, beep, beep!", Troy responded.',
+	p2: '"Beep, beep, beep, beep!", Troy responded.',
+	p3: '"Beep, beep, beep!", Troy responded.',
+	p4: '"Beep, beep", Troy responded.',
+	p5: '"Beep", Troy responded.'
+},
+{
+	p1: '"He responded!" the excitement filled Eve, her little clover brain could not process the excitement juice that overflows her stems.',
+	p2: 'The moment Eve got response from Troy was her happiest moment in years.',
+	p3: '"Oh.", Eve got the expected response, nothing excited, nothing amazing.',
+	p4: 'Eve got confused by his beep. "What does it mean? It could mean anything. Why does it mean this not that? Why do I have to figure it out?"',
+	p5: 'Eve saw his beep, however, the disability of Troy to respond in any other way repels Eve. She would not want to have a conversation or attachment to creatures like this.'
+},
+{
+	p1: '"I gotta get closer to her!" Troy thought, "Be more active!" he worries that his response was not enough.',
+	p2: "Waiting for Eve's response, Troy was anxious, excited, also proud of himself for making a move.",
+	p3: '"What next..."thought Troy, "Is there even a next?"',
+	p4: '"What if she does not send anything back?!"worried Troy, "Oh no!" Troy had some sort of abandonment issue which had to do his factory settings that no one can do anything about.',
+	p5: '"She better send me something back." thought Troy, "Otherwise I would feel very betrayed." Troy had had a controlling issue since the day he was sent out the factory, being rigid was one of his default quality.'
+},
+{//meng's response
+	p1: 'Having confirmed from Troy, Eve was more determined that he is interested in her too, she secreted more hormones to let him know.',
+	p2: 'Eve was happy to get the beep, and she secreted more hormones.',
+	p3: "Eve was kinda stuck, she doesn't know what to do next.",
+	p4: "'He's nice...', thought Eve. But soon she moved on to some other more important thoughts.",
+	p5: "'I don't want anything else to do with him anymore.', having sent her greetings, Eve thought that was it."
+},
+{//next level---
+	p1: 'Troy thought Eve was so perfect, "This clover is just adorable. Her scent, her gesture, her body"',
+	p2: '"I wanna get closer to her." Troy determined, "No matter what it takes."',
+	p3: '"It would be nice to get to know her more." Troy was just curious in general.',
+	p4: "'I think I'm gonna stay silent if she doesn't do anything more.', thought Troy, 'Hmmm...Yep'",
+	p5: 'Troy got distracted by a beautiful butterfly around him. "Hi Miss Butterfly. How is your day?"'
+},
+{
+	p1: 'Troy wanted to touch Eve, observe her, be around her all the time. He sent some report to his commander, saying he need a more detailed examination of the clover Eve, so that he could be moved closer to her.',
+	p2: 'Troy wanted to be next to Eve, that he came up with this brilliant idea: he sent some report to his commander, saying he need a more detailed examination of the clover Eve, so that he could be moved closer to her.',
+	p3: 'Troy came up with a brilliant idea, he sent some report to his commander, saying he need a more detailed examination of the clover Eve, so that he could be moved closer to her.',
+	p4: 'The commander of plant detectors saw Troy sending signal to Eve, he figured maybe those two need better communication. So he made a command to move Troy right next to Eve.',
+	p5: 'The commander of plant detectors was bored playing chess all day, he decided to move around his arrangement in the garden, so he coincidentally moved Troy right next to Eve.'
+},
+{
+	p1: "'OMG He's here !' Eve got so excited. 'What should I do? How should I behave? Should I smile? Should I greet? OMG I need to stay calm!'",
+	p2: "Eve was so happy that Troy is here, 'He must be moving here for me. I feel blessed...'",
+	p3: 'Eve saw Troy, she greeted. She was glad in general.',
+	p4: "Troy's relocation did grab Eve's attention, but she thought it is not that much of a deal.",
+	p5: "Eve glimpsed at Troy, and that was it."
+}
+
+		];
+
+
+		 var getLength = function(obj) {
+		    var i = 0, key;
+		    for (key in obj) {
+		        if (obj.hasOwnProperty(key)){
+		            i++;
+		        }
+		    }
+		    return i;
+		};
+			
+			containermother1.className = "containermother1";
+			
+			for (var i = 0; i<= length-1; i++){
+				booleanarray[i] = false;
+				booleanarray[0] = true;
+				container.push('container'+i);
+			    container[i]=document.createElement('div');
+				container[i].className = "container"+i;
+				containermother1.appendChild(container[i]);
+				document.body.appendChild(containermother1);
+				$(container[i]).hide();
+				$(container[0]).show();
+			}
+
+		update();
+		function update(){
+		requestAnimationFrame(update);
+			counterA++;
+				for(var i=0; i<=length-1; i++){
+				booleanarray[i] = false;
+
+						if(counterA >= counterB){
+						counterB=counterB+500;
+								if(cutie <=length-1){
+								cutie ++;
+								}else{
+								cutie = 0;
+								}
+						}else{
+						booleanarray[cutie] = true;
+						}
+
+				}
+
+				//decide();
+		}
+
+
+	function decide(){
+		console.log(myInt);
+			for(var i=0; i<=length-1; i++){
+					if(booleanarray[i]){
+						if(myInt === 1){
+							console.log('one');
+							container[i].innerHTML = paragraph1[i].p1;
+						}else if(myInt ===2){
+							console.log('two');
+							container[i].innerHTML = paragraph1[i].p2;
+						}else if(myInt ===3){
+							console.log('three');
+							container[i].innerHTML = paragraph1[i].p3;
+						}else if(myInt ===4){
+							console.log('four');
+							container[i].innerHTML = paragraph1[i].p4;
+						}else if(myInt ===5){
+							console.log('five');
+							container[i].innerHTML = paragraph1[i].p5;
+						}else{
+							//myInt=Math.floor((Math.random() * 5) + 1);
+						}
+
+							$(container[i]).show();
+					}else{
+							$(container[i]).hide();
+					}
+			}
+	}
+
+	</script>
+
+</body>
+
+
+
+
+
+</html>
