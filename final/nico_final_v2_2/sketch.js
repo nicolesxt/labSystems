@@ -6,11 +6,11 @@ var ellipseX_each, ellipseY_each;
 var ellipse_array = [];//pile up the ellipse_count
 var ellipse_count = 0;//++ with the frames until totalellipses
 var totalellipses = 6;
-var ellipseR = 5;
+var ellipseR = 3;
 //for the barrier
 var bool = new p5.Vector(0,0);
 //movement
-var speed = 2;
+var speed = 1;
 
 //getting all the ellipse pos
 var ellipse_array_all = [];//an array that stores all the data
@@ -50,17 +50,17 @@ var distEC = 0; //distance between ellipses and controller
 var distEE = 0; //distance between ellipses and ellipses
 
 
-var gradJson = {"r" : 255,"g" : 0, "b" : 255};// holds gradient rgb data
+var gradJson = {"r" : 255,"g" : 0, "b" : 125};// holds gradient rgb data
 //color is increasing or decreasing
 var rFlip = false;
 var gFlip = true; 
 var bFlip = false;
 
-var wallAcceleration = 0.2;
-var wallSizeIncrease = 1;
+var wallAcceleration = 0.03; //game difficulty
+var wallSizeIncrease = 2;
 
 function setup() {
-  createCanvas(500,500);
+  createCanvas(750,750);
 }
 
 //socket io things
@@ -173,11 +173,11 @@ function draw() {
   //stroke(255, 255, 153);
   stroke(200);
   gradient(1);
-  rect(varr, varr, 500 - varr*2, 500 - varr*2);
+  rect(varr, varr, 750 - varr*2, 750 - varr*2);
   
   //update ellipse_array per frame(the drawing part not the calculation part)
-  ellipseX_each = random(varr + 50, 500 - varr - 50);
- ellipseY_each = random(varr + 50, 500 - varr - 50);
+  ellipseX_each = random(varr + 50, 750 - varr - 50);
+ ellipseY_each = random(varr + 50, 750 - varr - 50);
   for(i = 0; i < totalellipses - 1; i ++){
       fill(gradJson.r, gradJson.g, gradJson.b);
       stroke(0.4);
@@ -193,13 +193,13 @@ function draw() {
   }
   //for the ellipses (updated 5 fps)
   if(currentime >= smallellipse_rate*keyframe){
-    if(keyframe > 1000/smallellipse_rate-debug){
+    if(keyframe > 750/smallellipse_rate-debug){
       keyframe = 0;
     }else{
       smallellipse();
       keyframe ++;
     }
-    //print(1000/smallellipse_rate);
+    //print(750/smallellipse_rate);
   }
   
   //getting all the ellipse pos (updated 60 fps)
@@ -221,15 +221,15 @@ function draw() {
 
 function timeManager(){
   currentime += updateRate;
-  if(currentime >= 1000){
+  if(currentime >= 750){
     currentime = 0;
   }
 }
 
 function smallellipse(){
   fill(0,0,255);
-  var xrandom = random(varr + 20, 500 - varr - 20);
-  var yrandom = random(varr + 20, 500 - varr - 20);  
+  var xrandom = random(varr + 20, 750 - varr - 20);
+  var yrandom = random(varr + 20, 750 - varr - 20);  
   
 
 
@@ -298,13 +298,13 @@ function controllerclass(){
   if(controller.x < varr + controllerR/2+10){
     controller.add(addx);
   }
-  if(controller.x > 500 - varr - controllerR/2-10){
+  if(controller.x > 750 - varr - controllerR/2-10){
     controller.sub(addx);
   }
   if(controller.y < varr + controllerR/2+10){
     controller.add(addy);
   }
-  if(controller.y > 500 - varr - controllerR/2-10){
+  if(controller.y > 750 - varr - controllerR/2-10){
     controller.sub(addy);
   }
 }
@@ -341,7 +341,7 @@ function physicsclass(){
 
       
         //collision between ellipses and wall
-        if (ellipse_array[i].x < 3 || ellipse_array[i].x > 497 ){
+        if (ellipse_array[i].x < 3 || ellipse_array[i].x > 747 ){
           //print("collide");
           ellipse_array[i].dx *= -1;
           ellipse_array[i].speed += wallAcceleration;
@@ -350,7 +350,7 @@ function physicsclass(){
           ellipse_array[i].dx *= 1;
         }
         
-        if (ellipse_array[i].y < 3 || ellipse_array[i].y > 497 ){
+        if (ellipse_array[i].y < 3 || ellipse_array[i].y > 747 ){
           //print("collide");
           ellipse_array[i].dy *= -1;
           ellipse_array[i].speed += wallAcceleration;
