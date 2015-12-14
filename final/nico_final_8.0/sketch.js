@@ -2,8 +2,8 @@
 var ellipseX_each, ellipseY_each;
 var ellipse_array = [];//pile up the ellipse_count
 var ellipse_count = 0;//++ with the frames until totalellipses
-var totalellipses = 20;
-var ellipseR = 15;
+var totalellipses = 5;
+var ellipseR = 5;
 //for the barrier
 var bool = new p5.Vector(0,0);
 //movement
@@ -13,7 +13,7 @@ var speed = 6;
 var ellipse_array_all = [];//an array that stores all the data
 
 //if controller hit it or not?
-var controllerR = 15;
+var controllerR = 5;
 var controller = new p5.Vector(250, 250);//position
 var addx = new p5.Vector(7, 0);
 var addy = new p5.Vector(0, 7);
@@ -52,11 +52,11 @@ function setup() {
 
 function draw() {
   frameRate(80);
-  background(255);
+  //background(255);
   
   //update ellipse_array per frame(the drawing part not the calculation part)
-  ellipseX_each = random(5, 495);
-  ellipseY_each = random(5, 495);
+  ellipseX_each = random(varr, 500 - varr);
+  ellipseY_each = random(varr, 500 - varr);
   for(i = 0; i < totalellipses - 1; i ++){
       fill(255);
       stroke(0.4);
@@ -156,9 +156,10 @@ function controllerclass(){
     line(pointsX[1],pointsY[1],pointsX[2],pointsY[2]);
     line(pointsX[2],pointsY[2],pointsX[3],pointsY[3]);
     line(pointsX[3],pointsY[3],pointsX[0],pointsY[0]);
-    if(varr < 150){
-      varr += 5;
-    }
+    // if(varr < 150){
+    //   varr += 5;
+    // }
+    varr = 150;
     
 }
 
@@ -207,9 +208,6 @@ function physicsclass(){
           ellipse_array[i].dy *= 1;
         }
         
-        if(hasCollided1){
-          break;
-        }
         
       }
     }

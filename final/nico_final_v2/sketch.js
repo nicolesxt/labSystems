@@ -2,8 +2,8 @@
 var ellipseX_each, ellipseY_each;
 var ellipse_array = [];//pile up the ellipse_count
 var ellipse_count = 0;//++ with the frames until totalellipses
-var totalellipses = 20;
-var ellipseR = 15;
+var totalellipses = 10;
+var ellipseR = 5;
 //for the barrier
 var bool = new p5.Vector(0,0);
 //movement
@@ -13,7 +13,7 @@ var speed = 6;
 var ellipse_array_all = [];//an array that stores all the data
 
 //if controller hit it or not?
-var controllerR = 15;
+var controllerR = 70;
 var controller = new p5.Vector(250, 250);//position
 var addx = new p5.Vector(7, 0);
 var addy = new p5.Vector(0, 7);
@@ -21,9 +21,11 @@ var addy = new p5.Vector(0, 7);
 //inner barrier (result of random)
 var pointsX = [];//points for the barrier
 var pointsY = [];//points for the barrier
-var varr = 10;//var for the first square animation
+var varr = 140;//var for the first square animation
 var pointnum = 4;//how many points are there gonna be at first?
 
+//for controller to eject ellipses
+var bools1, bools2, bools3, bools4;
 
 //different framerates / speeds / animations
 var keyframe = 0;
@@ -42,35 +44,52 @@ var ellipse_vector = new p5.Vector(0,0);//v between ellipses and controller
 var ellipse_vector2 = new p5.Vector(0,0);//v between ellipses and ellipses
 var distEC = 0; //distance between ellipses and controller
 var distEE = 0; //distance between ellipses and ellipses
-var collisionTimeWindow = updateRate;//debug
-
 
 
 function setup() {
   createCanvas(500,500);
 }
 
+
+function undercontrol(xx, yy, rr){
+  var ifUnderControl = false;
+  var check1, check2, check3, check4;
+  check1 = width/2 - rr;
+  check2 = width/2 + rr;
+  check3 = height/2 - rr;
+  check4 = height/2 + rr;
+  if(xx > check1 || xx < check2){
+    if(yy > check3 || yy < check4){
+      ifUnderControl = true;
+      //when the spots are not in circle
+      //when the spots are not in circle it should be drawn
+    }
+  }
+  return ifUnderControl;
+}
+
 function draw() {
   frameRate(80);
-  background(255);
+  //background(255);
+  stroke(0);
+  
+  rect(varr, varr, 500 - varr*2, 500 - varr*2);
   
   //update ellipse_array per frame(the drawing part not the calculation part)
-  ellipseX_each = random(5, 495);
-  ellipseY_each = random(5, 495);
+  ellipseX_each = random(varr, 500 - varr);
+  ellipseY_each = random(varr, 500 - varr);
   for(i = 0; i < totalellipses - 1; i ++){
       fill(255);
       stroke(0.4);
     if(ellipse_array[i]){
-    ellipse(ellipse_array[i].x, ellipse_array[i].y, ellipseR, ellipseR);
-    
+      
+      if (undercontrol(ellipse_array[i].x, ellipse_array[i].y, controllerR+10))
+      ellipse(ellipse_array[i].x, ellipse_array[i].y, ellipseR, ellipseR);
        ellipse_array[i].x += ellipse_array[i].dx*speed;
        ellipse_array[i].y += ellipse_array[i].dy*speed;
-      
     }
     
   }
-  
-  
   //for the ellipses (updated 5 fps)
   if(currentime >= smallellipse_rate*keyframe){
     if(keyframe > 1000/smallellipse_rate-debug){
@@ -123,49 +142,67 @@ function keyPressed(){
   if (keyCode === 65) {//left
     //print("left");
     controller.sub(addx);
+    bools1 == false;
+    //
+    bools2 == true;
+    bools3 == true;
+    bools4 == true;
   } else if (keyCode === 68) {//right
     //print("right");
     controller.add(addx);
+    bools1 == false;
+    //
+    bools2 == true;
+    bools3 == true;
+    bools4 == true;
   }
   if (keyCode === 87) {//up
     controller.sub(addy);
     //print("up");
+    bools1 == false;
+    //
+    bools2 == true;
+    bools3 == true;
+    bools4 == true;
   } else if (keyCode === 83) {//down
     controller.add(addy);
     //print("down");
+    bools1 == false;
+    //
+    bools2 == true;
+    bools3 == true;
+    bools4 == true;
+  }else{
+    bools1 == true;
+    bools2 == true;
+    bools3 == true;
+    bools4 == true;
   }
+
 }
 
 function controllerclass(){
-  fill(0);
-  noStroke();
+  fill(255, 102, 204);
+  stroke(0);
   ellipse(controller.x, controller.y, controllerR, controllerR);
-  
-  //moving barrier code goes here
-    pointsX[0] = 5 + varr;
-    pointsY[0] = 5 + varr;
-    pointsX[1] = 495 - varr;
-    pointsY[1] = 5 + varr;
-    pointsX[2] = 495 - varr;
-    pointsY[2] = 495 - varr;
-    pointsX[3] = 5 + varr;
-    pointsY[3] = 495 - varr;
-    stroke(0);
-    strokeWeight(0.6);
-    line(pointsX[0],pointsY[0],pointsX[1],pointsY[1]);
-    line(pointsX[1],pointsY[1],pointsX[2],pointsY[2]);
-    line(pointsX[2],pointsY[2],pointsX[3],pointsY[3]);
-    line(pointsX[3],pointsY[3],pointsX[0],pointsY[0]);
-    if(varr < 150){
-      varr += 5;
-    }
-    
+  if(controller.x < varr + controllerR/2+10){
+    controller.add(addx);
+  }
+  if(controller.x > 500 - varr - controllerR/2-10){
+    controller.sub(addx);
+  }
+  if(controller.y < varr + controllerR/2+10){
+    controller.add(addy);
+  }
+  if(controller.y > 500 - varr - controllerR/2-10){
+    controller.sub(addy);
+  }
 }
 
 function physicsclass(){
   if(ellipse_array){
     for(i=0; i< totalellipses - 1; i++){
-      var hasCollided1 = false;
+
       if(ellipse_array[i]){
         //print(ellipse_array[i].x);//this is the data you ALWAYS need
         
@@ -189,12 +226,12 @@ function physicsclass(){
         }
       
 
+
       
         //collision between ellipses and wall
         if (ellipse_array[i].x < 3 || ellipse_array[i].x > 497 ){
           //print("collide");
           ellipse_array[i].dx *= -1;
-          hasCollided1 = true;
         }else{
           ellipse_array[i].dx *= 1;
         }
@@ -202,14 +239,10 @@ function physicsclass(){
         if (ellipse_array[i].y < 3 || ellipse_array[i].y > 497 ){
           //print("collide");
           ellipse_array[i].dy *= -1;
-          hasCollided1 = true;
         }else{
           ellipse_array[i].dy *= 1;
         }
         
-        if(hasCollided1){
-          break;
-        }
         
       }
     }
