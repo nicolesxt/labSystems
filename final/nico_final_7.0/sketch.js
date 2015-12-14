@@ -17,7 +17,11 @@ var controllerR = 15;
 var controller = new p5.Vector(250, 250);//position
 var addx = new p5.Vector(7, 0);
 var addy = new p5.Vector(0, 7);
-var poinrts = new p5.Vector(0,0);//points for the barrier
+
+//inner barrier (result of random)
+var pointsX = [];//points for the barrier
+var pointsY = [];//points for the barrier
+var varr = 10;//var for the first square animation
 var pointnum = 4;//how many points are there gonna be at first?
 
 //different framerates / speeds / animations
@@ -29,11 +33,14 @@ var debug = 0.1;//theoretically this should work but it needs to be modified, sm
 
 //physics engine = collision class
 var direction = new p5.Vector(0,0);
+var direction2 = new p5.Vector(0,0);//bet
 var passme = []; //to pass the count during collision (to check which one is being hitting)
 var passcount = 0; //adds up in the passme array
 var passme_each = -1;//set this to -1 so the if statement wouldnt be initialized at first
-var ellipse_vector = new p5.Vector(0,0);
-var distt = 0; //to check length
+var ellipse_vector = new p5.Vector(0,0);//v between ellipses and controller
+var ellipse_vector2 = new p5.Vector(0,0);//v between ellipses and ellipses
+var distEC = 0; //distance between ellipses and controller
+var distEE = 0; //distance between ellipses and ellipses
 
 function setup() {
   createCanvas(500,500);
@@ -95,7 +102,7 @@ function timeManager(){
 
 function smallellipse(){
   fill(0,0,255);
-  ellipse_array[ellipse_count] = {"x": ellipseX_each, "y": ellipseY_each, "dx": 0, "dy": 0};//original speed has to be 0
+  ellipse_array[ellipse_count] = {"x": ellipseX_each, "y": ellipseY_each, "dx": 0, "dy": 0, "id": ellipse_count};//original speed has to be 0
   //ellipse_array[ellipse_count].d is a pvector that contains the collision speed
   if(ellipse_count < totalellipses){
   ellipse_count ++;
@@ -131,10 +138,23 @@ function controllerclass(){
   ellipse(controller.x, controller.y, controllerR, controllerR);
   
   //moving barrier code goes here
-  for(i = 0 ; i <= pointnum ; i ++){
-    
-  }
-  
+    pointsX[0] = 5 + varr;
+    pointsY[0] = 5 + varr;
+    pointsX[1] = 495 - varr;
+    pointsY[1] = 5 + varr;
+    pointsX[2] = 495 - varr;
+    pointsY[2] = 495 - varr;
+    pointsX[3] = 5 + varr;
+    pointsY[3] = 495 - varr;
+    line(pointsX[0],pointsY[0],pointsX[1],pointsY[1]);
+    line(pointsX[1],pointsY[1],pointsX[2],pointsY[2]);
+    line(pointsX[2],pointsY[2],pointsX[3],pointsY[3]);
+    line(pointsX[3],pointsY[3],pointsX[0],pointsY[0]);
+    line(15, 15, 15, 480);
+    print(pointsX[0]);
+    print(pointsX[0]);
+    print(pointsY[1]);
+    print(pointsY[1]);
 }
 
 function physicsclass(){
@@ -147,10 +167,10 @@ function physicsclass(){
           // stroke(0);
           // strokeWeight(1);
           // line(ellipse_array[i].x, ellipse_array[i].y, controller.x, controller.y);
-      distt = int(dist(ellipse_array[i].x, ellipse_array[i].y, controller.x, controller.y));
+      distEC = int(dist(ellipse_array[i].x, ellipse_array[i].y, controller.x, controller.y));
       
-        //when the collision happens!
-        if(distt < (ellipseR + controllerR)/2){
+        //collision between ellipses and controller
+        if(distEC < (ellipseR + controllerR)/2){
           //print("collide");
         //for some reason this act weird if i put it outside of this if statement
         // so I have a complete different system outside, that repeats this step
@@ -162,8 +182,22 @@ function physicsclass(){
           ellipse_array[i].dy = direction.y;
         }
       
+        //collision between ellipses and ellipses
+        for(j = 0; j< totalellipses - 1; j++){
+          if(ellipse_array[j]){
+          distEE = int(dist(ellipse_array[i].x, ellipse_array[i].y, ellipse_array[j].x, ellipse_array[j].y));
+
+          if(distEE < (ellipseR + ellipseR)/2 && distEE != 0){
+            ellipse_vector2.set(ellipse_array[j].x, ellipse_array[j].y);
+            direction2 = ellipse_vector2.sub(ellipse_vector);
+            direction2.normalize();
+            ellipse_array[j].dx = direction2.x;
+            ellipse_array[j].dy = direction2.y;
+          }
+          }
+        }
       
-        //setting a barrier!!!
+        //collision between ellipses and wall
         if (ellipse_array[i].x < 3 || ellipse_array[i].x > 497 ){
           //print("collide");
           ellipse_array[i].dx *= -1;
@@ -172,7 +206,6 @@ function physicsclass(){
           ellipse_array[i].dx *= 1;
         }
         
-        
         if (ellipse_array[i].y < 3 || ellipse_array[i].y > 497 ){
           //print("collide");
           ellipse_array[i].dy *= -1;
@@ -180,7 +213,7 @@ function physicsclass(){
         }else{
           ellipse_array[i].dy *= 1;
         }
-
+        
       }
     }
   }
