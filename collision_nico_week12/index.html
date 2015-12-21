@@ -12,6 +12,25 @@
 
     <script src="sketch.js" type="text/javascript"></script>
     
+
+<script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+
+<!-- <script src ="require.js"></script> -->
+
+<script>
+  //socket io RECEIVING AND SENDING
+  var socket;
+  var url='localhost';
+  var dataport=8800;//from socket
+  socket = io.connect(url+':'+dataport);
+  socket.on('SocketToHTML', function (data) {
+    console.log(data.socket);
+    socket.emit('SocketToP5', { socket: 'p5!!!' });
+  });
+
+</script>
+
+    
     <style> body {padding: 0; margin: 0;} canvas {vertical-align: top;} </style>
   </head>
   <body>
