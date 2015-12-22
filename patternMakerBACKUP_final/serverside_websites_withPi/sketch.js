@@ -6,7 +6,7 @@ var left;
 var down;
 var right;
 
-var socket = io.connect('http://scriptmanship.com:8800');
+var socket = io.connect('localhost:8800');
 
   socket.on('connect', function(){});
   socket.on('serialdata', function(data){
